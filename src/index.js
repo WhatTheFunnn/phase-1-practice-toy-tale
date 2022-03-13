@@ -23,15 +23,47 @@ function getToys() {
     .then(response => response.json())
     .then(toys => {
       toys.forEach(toy => {
-        console.log(toy)
-        var myToy = JSON.stringify(toy)
-        const li = document.createElement('li')
-        li.innerText = toy.name
-        
-        
-        body.append(li)
+        const div = document.createElement('div')
+        div.className = "card"
+        const h2 = document.createElement("h2")
+        const img = document.createElement("IMG")
+        img.className = "toy-avatar"
+        const p = document.createElement("p")
+        const btn = document.createElement("button")
+        btn.className = "like-btn"
+        btn.id = "toy_id"
+        body.appendChild(div)
+        div.appendChild(h2)
+        div.appendChild(img)
+        div.appendChild(p)
+        div.appendChild(btn)
+        h2.innerText = `${toy.name}`
+        p.innerText = `${toy.likes} Likes`
+        btn.innerText = "Like ❤️"
+        img.src = `${toy.image}`
+
       })
     })
 }
 
-[0].name
+
+function newToy() {
+  const data = document.getElementsByClassName("input-text")
+  const name = data.name
+  console.log(data.name)
+  fetch('http://localhost:3000/toys', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success', data);
+    })
+    .catch((error) => {
+      console.error('Error', error)
+
+    })
+}
