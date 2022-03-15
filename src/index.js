@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   getToys()
+  newToy
 });
 
 function getToys() {
@@ -47,11 +48,20 @@ function getToys() {
 }
 
 
-function newToy() {
-  const data = document.getElementsByClassName("input-text")
-  const name = data.name
-  console.log(data.name)
-  fetch('http://localhost:3000/toys', {
+
+function newToy(event) {
+  const submit = document.getElementsByClassName("submit")
+  submit.addEventListener("click", (e))
+  alert("I work")
+  event.preventDefault();
+  
+  const toyInfo = document.getElementsByClassName("input-text")
+  const data = { "name": ' ', "image": ' ' };
+  data.name = toyInfo;
+  data.image = toyInfo;
+  console.log(data)
+
+  fetch('http://localhost/3000/toys', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -64,6 +74,5 @@ function newToy() {
     })
     .catch((error) => {
       console.error('Error', error)
-
     })
 }
