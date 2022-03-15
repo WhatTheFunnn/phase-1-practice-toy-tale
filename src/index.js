@@ -1,5 +1,6 @@
 let addToy = false;
 
+
 document.addEventListener("DOMContentLoaded", () => {
   const addBtn = document.querySelector("#new-toy-btn");
   const toyFormContainer = document.querySelector(".container");
@@ -13,8 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   getToys()
-  newToy
 });
+
 
 function getToys() {
   let toyList = "http://localhost:3000/toys"
@@ -32,7 +33,7 @@ function getToys() {
         const p = document.createElement("p")
         const btn = document.createElement("button")
         btn.className = "like-btn"
-        btn.id = "toy_id"
+        btn.id = toy.id
         body.appendChild(div)
         div.appendChild(h2)
         div.appendChild(img)
@@ -42,29 +43,51 @@ function getToys() {
         p.innerText = `${toy.likes} Likes`
         btn.innerText = "Like ❤️"
         img.src = `${toy.image}`
-
+        btn.addEventListener("click", (e) => {
+          addLike(e) 
+        })
       })
     })
 }
 
-
-
-function newToy(event) {
-  const submit = document.getElementsByClassName("submit")
-  submit.addEventListener("click", (e))
-  alert("I work")
-  event.preventDefault();
+function addLike(e) {
+  const newNumberOfLikes = parseInt(e.target.previousElementSibling.innerText) + 1 
   
-  const toyInfo = document.getElementsByClassName("input-text")
-  const data = { "name": ' ', "image": ' ' };
-  data.name = toyInfo;
-  data.image = toyInfo;
-  console.log(data)
+  fetch( `http://localhost:3000/toys/${e.target.id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    },
+    body: JSON.stringify({
+      "likes": newNumberOfLikes
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    e.target.previousElementSibling.innerText = `${data.likes} likes`
+  })
+}
 
-  fetch('http://localhost/3000/toys', {
+
+const form = document.querySelector(".add-toy-form")
+form.addEventListener("submit", (e) => {
+
+  const toyName = e.target.name.value
+  const toyImage = e.target.image.value
+  newToy(toyName, toyImage)
+})
+
+
+function newToy(toyName, toyImage) {
+
+  const data = { "name": toyName, "image": toyImage, "likes": 0 };
+  console.log(data)
+  fetch('http://localhost:3000/toys', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Accept': 'application/json'
     },
     body: JSON.stringify(data),
   })
@@ -76,3 +99,6 @@ function newToy(event) {
       console.error('Error', error)
     })
 }
+
+
+
